@@ -1,7 +1,6 @@
 #!/bin/sh
 
 #ソースファイル
-#source_files="./docs/ch02_phyasical.md" #debug
 source_files=`find ./ -name "*md" | grep docs | sort`
 
 #epub設定ファイル

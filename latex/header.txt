@@ -1,0 +1,122 @@
+% タイトル情報
+\title{iBeaconハンドブック}
+\author{上原 昭宏}
+\date{2014年3月15日}
+
+\usepackage{makeidx}
+\makeindex
+
+%ジオメトリ, http://www.ctan.org/pkg/geometry
+\usepackage[papersize={6.0in, 9.0in}, portrait, bindingoffset=0.5in, top=0.25in, bottom=0.75in, inner=0.25in, outer=0.5in, includehead]{geometry}
+
+%フォントを埋め込み
+%\usepackage[hiragino-pro]{luatexja-preset}
+
+%章の見出し番号を、深さ4(chapter, section, subsection, subsubsection)まで出力する
+\setcounter{secnumdepth}{4}
+
+%図表のキャプションからコロンを除く
+\makeatletter
+\long\def\@makecaption#1#2{%
+\vskip\abovecaptionskip
+\iftdir\sbox\@tempboxa{#1\hskip1zw#2}%
+\else\sbox\@tempboxa{#1 #2}%
+\fi
+\ifdim \wd\@tempboxa >\hsize
+\iftdir #1\hskip1zw#2\relax\par
+\else #1 #2\relax\par\fi
+\else
+\global \@minipagefalse
+\hbox to\hsize{\hfil\box\@tempboxa\hfil}%
+\fi
+\vskip\belowcaptionskip}
+\makeatother
+
+% 色の定義
+\usepackage{color}
+\definecolor{mgrey}{gray}{0.75}
+
+%見出し表示, http://www.ctan.org/tex-archive/macros/latex/contrib/titlesec/
+%ここの解説がわかりやすい http://www.biwako.shiga-u.ac.jp/sensei/kumazawa/tex/titlesec.html
+\usepackage[bf, medium, raggedright, compact, calcwidth]{titlesec}
+
+%\titleformat{⟨command⟩}[⟨shape⟩]{⟨format⟩}{⟨label⟩}{⟨sep⟩}{⟨before-code⟩}[⟨after-code⟩]
+
+\titleformat{\chapter}[display]{\large\bfseries}{\raggedleft 第 \thechapter 章}{1pt}{\huge\bfseries\raggedleft}[\color{mgrey}{\titlerule[4pt]}]
+\titleformat{\section}[hang]{\Large\bfseries}{\thesection}{12pt}{}[\color{mgrey}{\titlerule[2pt]}]
+\titleformat{\subsection}[hang]{\large\bfseries}{\thesubsection}{12pt}{}[\color{mgrey}{\titlerule[1pt]}]
+\titleformat{\subsubsection}[hang]{\large\bfseries}{\thesubsubsection}{12pt}{}[\color{mgrey}{\titlerule[1pt]}]
+\titleformat{\subsubsubsection}[hang]{\large\bfseries}{\thesubsubsubsection}{12pt}{}[\color{mgrey}{\titlerule[1pt]}]
+\titleformat{\paragraph}[runin]{\normalsize\bfseries}{\theparagraph}{12pt}{}[]
+
+%グラフィックス, 最大縦を8cm、横が超えていたらライン幅の0.9倍に
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth0.9\linewidth\else\Gin@nat@width\fi}
+%\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\def\maxheight{8cm}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
+% Objective-Cのソースコードのリスティング設定
+% http://quickies.seriot.ch/?id=109
+\usepackage{color}
+\usepackage{listings}
+\lstdefinelanguage{Objective-C 2.0}[Objective]{C} {
+    morekeywords={id, Class, SEL, IMP, BOOL, nil, Nil, NO, YES,
+                  oneway, in, out, inout, bycopy, byref,
+                  self, super, _cmd,
+                  @required, @optional,
+                  @try, @throw, @catch, @finally,
+                  @synchronized, @property, @synthesize, @dynamic},
+}
+\lstdefinestyle{Xcode} {
+    language        = Objective-C 2.0,
+%    basicstyle      = footnotesizettfamily,
+    extendedchars   = true,
+    tabsize         = 2,
+    showspaces      = false,
+    showstringspaces = false,
+    breakautoindent = true,
+    flexiblecolumns = true,
+%    keepspaces      = true,
+    keepspaces      = false,
+    stepnumber      = 0,
+    xleftmargin     = 0pt}
+\definecolor{listingRuleColor}{gray}{0.75}
+\lstset{
+    style = Xcode,
+%    caption=lstname,
+    breaklines=false,
+    frame=single,
+    frameround=tttt,
+    rulecolor=\color{listingRuleColor},
+    framerule=2pt
+}
+
+%索引を1段組に
+% http://oku.edu.mie-u.ac.jp/tex/mod/forum/discuss.php?d=672
+\usepackage{makeidx}
+\makeatletter
+\renewenvironment{theindex}% renew
+              {\if@twocolumn
+                  \@restonecolfalse
+                \else
+                  \@restonecoltrue
+                \fi
+%                \twocolumn[\section*{\indexname}]% original
+                \section*{\indexname}%
+                \@mkboth{\MakeUppercase\indexname}%
+                        {\MakeUppercase\indexname}%
+                \thispagestyle{plain}\parindent\z@
+                \parskip\z@ \@plus .3\p@\relax
+                \columnseprule \z@
+                \columnsep 35\p@
+                \let\item\@idxitem}
+              {\if@restonecol\onecolumn\else\clearpage\fi}
+
+%% ==== ここまで ==== %%
+
