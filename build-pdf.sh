@@ -1,23 +1,32 @@
 #!/bin/sh
 
 #ソースファイル
-source_files=`find ./ -name "*md" | grep docs | sort`
+source_files=`find ./docs -name "*md" | sort`
+
+#source_files="./docs/ch00_preview.md"
+#source_files="./docs/ch02_phyasical.md" 
+#source_files=`find ./ -name "*01*md" | grep docs | sort`
+#source_files=`find ./ -name "*02*md" | grep docs | sort`
+
+CUR_DIR=`pwd`
+DIR=`echo $(cd $(dirname $0);pwd)`
 
 #出力ファイル名
-pdf_file="ibeaconbook.pdf"
+pdf_file="book.pdf"
 
 #lualatex用のファイル
-latex_header_file="./latex/header.txt"
-latex_ist_file="./latex/dot.ist"
+latex_header_file="$DIR/latex/header.txt"
+latex_ist_file="$DIR/latex/dot.ist"
+#latex_template="./latex/default.latex"
 
 # 作業変数
-tmp_dir="./tmp_pdf_working/"
-tmp_file1="ibeaconbook1.md"
-tmp_file2="ibeaconbook2.md"
-latex_file1="ibeaconbook1.tex"
-latex_file2="ibeaconbook2.tex"
-latex_idx_file2="ibeaconbook2.idx"
-latex_file2_pdf="ibeaconbook2.pdf"
+tmp_dir=$TMPDIR/com.reinforce-lab.com.book/
+tmp_file1="book1.md"
+tmp_file2="book2.md"
+latex_file1="book1.tex"
+latex_file2="book2.tex"
+latex_idx_file2="book2.idx"
+latex_file2_pdf="book2.pdf"
 
 #作業ディレクトリを準備
 rm -Rf $tmp_dir
@@ -33,17 +42,20 @@ do
 done
 # スタイルファイルをコピー
 cp $latex_header_file $tmp_dir
-cp $latex_ist_file    $tmp_dir
-
+cp $latex_ist_file $tmp_dir
+#cp $latex_template $tmp_dir
 # ソースファイルを1つに結合
 cat $source_files > $tmp_dir/$tmp_file1
-
 #図表をコピー
 cp -Rf ./fig $tmp_dir
+#debug
+#cp $epub_files $tmp_dir
 
 # Markdown to lualatex
+#/usr/local/bin/pandoc $tmp_file1 --latex-engine=lualatex -o $latex_file1
 cd $tmp_dir
-../preprocesser-pdf.rb -i $tmp_file1 -o $tmp_file2
+$DIR/preprocesser-pdf.rb -i $tmp_file1 -o $tmp_file2
+#cp $tmp_file1 $tmp_file2
 
 /usr/local/bin/pandoc $tmp_file2 -s \
 -V documentclass=ltjbook -V classoption=luatexja \
@@ -54,17 +66,18 @@ cd $tmp_dir
 --latex-engine=lualatex \
 -o $latex_file1
 
-../postprocesser-pdf.rb -i $latex_file1 -o $latex_file2
+$DIR/postprocesser-pdf.rb -i $latex_file1 -o $latex_file2
 
 # 参照解決のために2回実行
 lualatex $latex_file2
 lualatex $latex_file2
 # 索引作成
-makeindex -r -c  -p any $latex_idx_file2
+makeindex -r -c -s dot.ist -p any $latex_idx_file2
+#makeindex -r -c  -p any $latex_idx_file2
 lualatex $latex_file2
 lualatex $latex_file2
 
-# 生成ファイルの移動とワーキングディレクトリの削除
-mv $latex_file2_pdf ../$pdf_file
-cd ../
-rm -Rf $tmp_dir
+mv $latex_file2_pdf $CUR_DIR/$pdf_file
+
+#rm -Rf $tmp_dir
+#mendex -r -c -g -s dot.ist -p any foo.idx

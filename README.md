@@ -2,7 +2,31 @@
 
 [Pandoc](http://johnmacfarlane.net/pandoc/README.html) を使いiBeaconハンドブックをMacな環境で書くのに使った、プリプロセッサとビルドスクリプトです。epub形式とPDF形式を1ソースから生成します。
 
-## PDFを生成するためのLaTeX環境構築
+このフォルダにある、book.epub, book.pdfのような電子書籍が生成できます。
+
+## とりあえず使ってみる
+EPUB形式のファイル生成であれば、[pandoc](http://johnmacfarlane.net/pandoc/)をインストールするだけです。PDFファイルを生成するには、次のLaTeX環境構築の手順に従いLuaLaTeXをインストールしてください。
+
+適当な作業フォルダで次のシェルスクリプトを実行すれば、電子書籍が生成されます。ファイル名はbook.epubもしくはbook.pdfです。とりあえず動作を確かめてみたいときは、このプロジェクトの次のシェルスクリプトを実行すれば、サンプルドキュメント(docs/ fig/ にあるファイルから)電子書籍ファイルが生成されます。
+
+~~~~
+$ build-epub.sh
+$ build-pdf.sh
+~~~~
+
+## プロジェクトの作成とサブモジュールとして読み込み
+このプロジェクト自体はサブモジュールとして利用すればよいでしょう。
+
+~~~~.csh
+$ mkdir 適当な作業フォルダ
+$ cd 作業フォルダ; mkdir docs; mkdir fig
+$ (本文や図表ファイルを作る。epub形式の場合は、必ず表紙画像ファイル fig/cover.jpg を用意する。)
+$ git init; git add *; 
+$ git submodule add https://github.com/reinforce-lab/markdown_ebook_basekit
+$ markdown_ebook_basekit/build-epub.sh もしくは markdown_ebook_basekitbuild-pdf.sh を実行してファイル生成
+~~~~
+
+### PDFを生成するためのLaTeX環境構築
 Lualatexを使います。 http://oku.edu.mie-u.ac.jp/~okumura/texwiki/?Mac の手順どおりです:
 
 1. パッケージ MacTeX.pkg をインストール。
@@ -22,11 +46,26 @@ $ sudo ln -fs "/Library/Fonts/ヒラギノ角ゴ Std W8.otf" ./HiraKakuStd-W8.ot
 $ sudo mktexlsr
 ~~~~
 
-### PDFファイルへのフォント埋め込み
+#### PDFファイルへのフォント埋め込み
 このスクリプトで生成したPDFファイルにはフォントが埋め込まれていません。プレビューappでPDFファイルを開き、適当なプリンタを選択して、必要があればカスタム設定をしてターゲットの用紙サイズを選択して、解像度を600/1200dpiに設定して、左下のPDFを生成を選択します。
 
 ## テキストの作成
-まずテキストをMarkdown記法で記述します。ソースは章単位などの適当なかたまりでファイルに分割記述できます。スクリプトが、docs/ フォルダ以下にある拡張子 "md" のファイルを降順ソートして1つのファイルにまとめます。図はpng形式で、fig/ 以下に置きます。
+まずテキストを、フォルダ docs/ 以下にMarkdown記法で記述します。
+ソースは章単位などの適当なかたまりでファイルに分割記述できます。スクリプトが、docs/ フォルダ以下にある拡張子 "md" のファイルを降順ソートして1つのファイルにまとめます。図はpng形式で、fig/ 以下に置きます。
+
+## フォルダ構成
+フォルダ名は決め打ちです。本文および図表は以下のフォルダに置きます。
+
+- docs/
+	- markdown形式の本文テキストファイルを置きます。拡張子は .md です。ファイル分割している場合は、sortしたファイル順で読み込みます。
+- fig/
+	- 図表を起きます。
+
+### epub形式
+EPUB形式のタイトルや著者情報は、epub/title.txt で設定します。表紙画像ファイルは fig/cover.jpg に置きます。表紙画像がないとEPUB生成時にエラーになります。
+
+### PDF形式
+PDF形式のタイトルや著者情報は、latex/header.txt で設定します。冒頭のタイトルと、hyperrefのPDFのタイトルをそれぞれ設定します。latex/index_dic.txt は索引の辞書です。
 
 ### 図表の参照
 Pandocには図表やテーブル番号の参照機能がないため、プリプロセッサで補っています。
@@ -45,11 +84,3 @@ Table: #table_ble_spec Bluetooth Low Energyの物理層の特性
 
 [#table_ble_spec]
 ```
-
-
-### epub形式のファイルを出力
-出力ファイル名は build.sh にベタ書きしています。build.sh 先頭の変数を適当にいじってください。build.sh を実行するとepub形式のファイルが出来上がります。
-
-### PDF形式のファイルを出力
-出力ファイル名は build-pdf.sh にベタ書きしています。PDFのタイトルは、latex/header.txt にベタ書きしています。
-build.sh 先頭の変数を適当にいじってください。build.sh を実行するとepub形式のファイルが出来上がります。

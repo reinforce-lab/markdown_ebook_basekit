@@ -50,6 +50,7 @@ open( inputFileName ) {|f|
 		unless putTocFlag 
 			if /^\\putTableofcontents/ =~ line
 				putTocFlag = true				
+#				interText.concat("\\pagenumbering{roman}\n")
 				interText.concat("\\tableofcontents\n")				
 				next
 			end
@@ -74,6 +75,7 @@ open( inputFileName ) {|f|
 			caption   = $2
 			#テーブルのCaption
 			unless tableCaptionTagkey.empty?
+#				tcapstr = "\\captionof{table}{%s} \\\\" % caption
 				tcapstr = "\\caption{%s}" % caption
 				unless tagname.nil?
 					tcapstr.concat(" \\label{%s}" % tagname.gsub(/(\#|\\)/, ""))

@@ -1,7 +1,32 @@
+
+\usepackage{luatexja} 
+\usepackage{luatexja-fontspec}
+
 % タイトル情報
 \title{iBeaconハンドブック}
 \author{上原 昭宏}
 \date{2014年3月15日}
+
+\usepackage{hyperref}
+\hypersetup{ 
+  bookmarks=true, 
+  bookmarksnumbered=true, 
+  colorlinks=true,
+  pdfencoding=auto,
+  pdfauthor={上原 昭宏},
+  pdftitle={iBeaconハンドブック},  
+  citecolor=green,
+  urlcolor=magenta,
+  linkcolor=red,
+  pdfborder={0 0 0}
+}
+
+%% フォントの設定（和文本文ゴシックで、見出しをW6に）
+\setsansjfont[BoldFont=HiraKakuPro-W6]{HiraKakuPro-W3}
+\setmainjfont[BoldFont=HiraKakuPro-W6]{HiraKakuPro-W3}
+%%% いただいたPDFは英文がserifでしたが、英文をsanserifにするなら以下もご利用ください
+\setmainfont[BoldFont=Helvetica Neue Medium]{Helvetica Neue}
+\setsansfont[BoldFont=Helvetica Neue Bold]{Helvetica Neue}
 
 \usepackage{makeidx}
 \makeindex
@@ -49,6 +74,22 @@
 \titleformat{\subsubsubsection}[hang]{\large\bfseries}{\thesubsubsubsection}{12pt}{}[\color{mgrey}{\titlerule[1pt]}]
 \titleformat{\paragraph}[runin]{\normalsize\bfseries}{\theparagraph}{12pt}{}[]
 
+%sf,bf,compact,topmarks,calcwidth,pagestyles]{titlesec}
+%\titleformat{\chapter}[frame]
+%    {\normalfont}
+%    {\filleft\BIG48pt
+%     \enspace\bfseries\thechapter\enspace}
+%    {25pt}
+%    {\Large\bfseries\filleft}
+%\newpagestyle{main}{
+%  \sethead[\thepage][\chaptertitle][(\thesection] % even
+%          {\thesection)}{\sectiontitle}{\thepage}} % odd
+%\pagestyle{main}
+
+%titleformat{\section}[hang]{\large\bfseries}
+%{\colorbox{black}{\color{white}\thesection}}{12pt}{}%
+%[{\titlerule[1pt]}]
+
 %グラフィックス, 最大縦を8cm、横が超えていたらライン幅の0.9倍に
 \usepackage{graphicx}
 \makeatletter
@@ -61,10 +102,11 @@
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 
-% Objective-Cのソースコードのリスティング設定
+% 
 % http://quickies.seriot.ch/?id=109
 \usepackage{color}
 \usepackage{listings}
+
 \lstdefinelanguage{Objective-C 2.0}[Objective]{C} {
     morekeywords={id, Class, SEL, IMP, BOOL, nil, Nil, NO, YES,
                   oneway, in, out, inout, bycopy, byref,
@@ -86,6 +128,7 @@
     keepspaces      = false,
     stepnumber      = 0,
     xleftmargin     = 0pt}
+
 \definecolor{listingRuleColor}{gray}{0.75}
 \lstset{
     style = Xcode,
@@ -96,6 +139,31 @@
     rulecolor=\color{listingRuleColor},
     framerule=2pt
 }
+
+
+\usepackage{capt-of}
+%これを使うと、表のサブの番号がダブルカウントになる
+% longtable のcaptionのパッチ当て
+% http://tex.stackexchange.com/questions/148624/captionof-in-longtable-gives-misplaced-noalign
+%\usepackage{longtable}
+%\usepackage{etoolbox}
+%\makeatletter
+%\let\o@caption\caption
+%\newcommand\LT@captionof[2]
+%{%
+%  \multicolumn{\LT@cols}{p{\textwidth}}{\def\@captype{#1}\o@caption{#2}}%
+%}
+%\patchcmd\LT@array{\let\caption\LT@caption}
+%{\let\caption\LT@caption\let\captionof\LT@captionof}{}{}
+%\makeatother
+
+%-B FILE (before body)
+%\maketitle
+%{
+%\hypersetup{linkcolor=black}
+%\setcounter{tocdepth}{3} %toc depth is 3
+%\tableofcontents
+%}
 
 %索引を1段組に
 % http://oku.edu.mie-u.ac.jp/tex/mod/forum/discuss.php?d=672
@@ -117,6 +185,8 @@
                 \columnsep 35\p@
                 \let\item\@idxitem}
               {\if@restonecol\onecolumn\else\clearpage\fi}
+
+%表紙はページ番号を除く
 
 %% ==== ここまで ==== %%
 

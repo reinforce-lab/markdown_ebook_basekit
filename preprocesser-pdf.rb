@@ -36,6 +36,10 @@ if inputFileName == "" || outputFileName == ""
 	exit(0)
 end
 
+# 1行づつ読み込み、テーブルと図表の番号振り。
+#sectionNum    = -1
+#figureNum     = 1
+#tableNum      = 1
 referenceText = ""
 interText     = ""
 taghash       = Hash::new
@@ -47,9 +51,12 @@ open( inputFileName ) {|f|
 #			captionheader = "表 %d.%d" % [sectionNum, tableNum]
 			tagname   = $1
 			caption   = $2
+#print "tagname:" + tagname + "\n"
 			unless tagname.nil?
 				tagwosharp       = tagname.gsub(/\#/, "")
 				taghash[tagname] = "表 \\ref{%s}" % tagwosharp
+#				interText.concat( "[%s]: %s \"%s\"\n" % [tagname, tagname, captionheader])
+#				interText.concat( "<a href=\"%s\"/>\n\n" % tagname)			
 			end
 			interText.concat( "Table: %s %s\n" % [tagname, caption])
 #			tableNum += 1
@@ -57,6 +64,7 @@ open( inputFileName ) {|f|
 		end
 		# ![ #tagname caption](filepath) を検出。タグは省略可能
 		if /^!\[\s*(.+)\s*\]\s*\((.+)\)/ =~ line
+#			captionheader = "図 %d.%d" % [sectionNum, figureNum]
 			tagname = nil
 			caption = $1
 			linktext= $2
@@ -66,18 +74,30 @@ open( inputFileName ) {|f|
 			end
 			# 図表の開始コマンドを出力
 			interText.concat("\\begin{figure}[htbp]\n\\centering\n")
+#			captiontext = "%s %s" % [captionheader, caption]
 			interText.concat( "\\includegraphics{%s}\n" % linktext)
+#			interText.concat("<div class=\"figure-caption\">%s</div>" % captiontext)	
 			interText.concat("\\caption{%s}\n" % caption)
 			unless tagname.nil?
 				tagwosharp = tagname.gsub(/\#/, "")
 				taghash[tagname] = "図 \\ref{%s}" % tagwosharp
 				interText.concat("\\label{%s}\n" % tagwosharp)
+#				interText.concat( "[%s]: %s \"%s\"\n" % [tagname, tagname, captionheader])
+#				interText.concat( "<a href=\"%s\"/>\n" % tagname)
 			end			
 			# 図表の終了コマンドを出力
 			interText.concat("\\end{figure}\n")
+#			figureNum += 1
 			next
 		end	
 
+		# 見出し(行頭が#1つで始まる)を検出
+		if /^#\s/ =~ line
+#print line
+#			sectionNum  = sectionNum + 1
+#			figureNum   = 1
+#			tableNum    = 1
+		end		
 		# 書き出し。
 		interText.concat("%s" % line)
 	}
@@ -90,6 +110,7 @@ interText.each_line {|line|
 		if taghash[$1].nil?
 			print "Warning: unknown tag, %s .\n" % $1
 		end
+#		outText.concat("%s [%s](%s) %s\n" % [$`, taghash[$1], $1 ,$'])
 		outText.concat("%s %s %s" % [$`, taghash[$1] ,$'])
 	next
 	end
