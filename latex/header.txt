@@ -3,9 +3,9 @@
 \usepackage{luatexja-fontspec}
 
 % タイトル情報
-\title{iBeaconハンドブック}
-\author{上原 昭宏}
-\date{2014年3月15日}
+\title{$title}
+\author{$author}
+\date{$publication_date}
 
 \usepackage{hyperref}
 \hypersetup{ 
@@ -13,8 +13,8 @@
   bookmarksnumbered=true, 
   colorlinks=true,
   pdfencoding=auto,
-  pdfauthor={上原 昭宏},
-  pdftitle={iBeaconハンドブック},  
+  pdfauthor={$author},
+  pdftitle={$title},  
   citecolor=green,
   urlcolor=magenta,
   linkcolor=red,

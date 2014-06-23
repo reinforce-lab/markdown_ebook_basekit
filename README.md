@@ -26,6 +26,18 @@ $ git submodule add https://github.com/reinforce-lab/markdown_ebook_basekit
 $ markdown_ebook_basekit/build-epub.sh もしくは markdown_ebook_basekitbuild-pdf.sh を実行してファイル生成
 ~~~~
 
+## 設定ファイル
+タイトルや著者名など書籍ごとの設定はUTF-8の settings.txt に記述します。これはsedのコマンドファイルです。"実行時のフォルダにある" settings.txt を読み込みます。このプロジェクトにある settings.txt を元にして編集するのがよいです。
+
+~~~~
+# タイトル
+s/\$title/iBeaconハンドブック/g
+# 著者名
+s/\$author/上原 昭宏/g
+# 発行日
+s/\$publication_date/2014年3月15日/g
+~~~~
+
 ### PDFを生成するためのLaTeX環境構築
 Lualatexを使います。 http://oku.edu.mie-u.ac.jp/~okumura/texwiki/?Mac の手順どおりです:
 

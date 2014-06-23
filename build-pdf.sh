@@ -2,7 +2,7 @@
 
 #ソースファイル
 source_files=`find ./docs -name "*md" | sort`
-
+setting_file="settings.txt"
 #source_files="./docs/ch00_preview.md"
 #source_files="./docs/ch02_phyasical.md" 
 #source_files=`find ./ -name "*01*md" | grep docs | sort`
@@ -21,6 +21,7 @@ latex_ist_file="$DIR/latex/dot.ist"
 
 # 作業変数
 tmp_dir=$TMPDIR/com.reinforce-lab.com.book/
+tmp_latex_header_file="$tmp_dir/header.txt"
 tmp_file1="book1.md"
 tmp_file2="book2.md"
 latex_file1="book1.tex"
@@ -32,6 +33,12 @@ latex_file2_pdf="book2.pdf"
 rm -Rf $tmp_dir
 mkdir -p $tmp_dir
 
+#設定ファイルがあるか確認
+if [ ! -f $setting_file ]; then
+	echo "$setting_file does not exist."
+	exit
+fi
+
 #ソースファイルがあるかを確認, ターゲットにコピー
 for source_file in $source_files $latex_header_file $latex_ist_file
 do
@@ -41,8 +48,8 @@ do
 	fi
 done
 # スタイルファイルをコピー
-cp $latex_header_file $tmp_dir
-cp $latex_ist_file $tmp_dir
+sed -f $setting_file < $latex_header_file > $tmp_latex_header_file
+#cp $latex_ist_file $tmp_dir
 #cp $latex_template $tmp_dir
 # ソースファイルを1つに結合
 cat $source_files > $tmp_dir/$tmp_file1
@@ -62,7 +69,7 @@ $DIR/preprocesser-pdf.rb -i $tmp_file1 -o $tmp_file2
 -V urlcolor=black -V citecolor=black -V linkcolor=black \
 -V "fontsize:10pt" \
 --chapters --table-of-contents --toc-depth=3 \
--H header.txt --listings \
+-H $tmp_latex_header_file --listings \
 --latex-engine=lualatex \
 -o $latex_file1
 
@@ -72,7 +79,7 @@ $DIR/postprocesser-pdf.rb -i $latex_file1 -o $latex_file2
 lualatex $latex_file2
 lualatex $latex_file2
 # 索引作成
-makeindex -r -c -s dot.ist -p any $latex_idx_file2
+makeindex -r -c -s $latex_ist_file -p any $latex_idx_file2
 #makeindex -r -c  -p any $latex_idx_file2
 lualatex $latex_file2
 lualatex $latex_file2

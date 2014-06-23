@@ -1,0 +1,9 @@
+# 設定情報ファイル。これはsedのコマンドファイルです。
+
+# タイトル
+s/\$title/iBeaconハンドブック/g
+# 著者名
+s/\$author/上原 昭宏/g
+# 発行日
+s/\$publication_date/2014年3月15日/g
+
