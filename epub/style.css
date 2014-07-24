@@ -1,5 +1,5 @@
 /* This defines styles and classes used in the book */
-body { margin: 5%; text-align: justify; font-size: medium; }
+body { margin: 0 1em; font-size: medium; }
 code { font-family: monospace; }
 h1 { text-align: left; }
 h2 { text-align: left; }
@@ -13,9 +13,18 @@ h3.date { }
 ol.toc { padding: 0; margin-left: 1em; }
 ol.toc li { list-style-type: none; margin: 0; padding: 0; }
 
+/*図の最大幅を指定*/
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
 /*図のキャプション*/
 .figure-caption {
 	text-align: center;
+}
+/* 表紙は中央に */
+div#cover-image {
+    text-align: center;
 }
 
 /*ソースコードのブロック*/
