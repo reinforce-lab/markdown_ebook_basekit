@@ -65,6 +65,7 @@ $DIR/preprocesser-pdf.rb -i $tmp_file1 -o $tmp_file2
 #cp $tmp_file1 $tmp_file2
 
 /usr/local/bin/pandoc $tmp_file2 -s \
+-f markdown+grid_tables+multiline_tables \
 -V documentclass=ltjbook -V classoption=luatexja \
 -V urlcolor=black -V citecolor=black -V linkcolor=black \
 -V "fontsize:10pt" \

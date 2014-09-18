@@ -49,6 +49,7 @@ $DIR/preprocesser.rb -i $tmp_file1 -o $tmp_file2
 
 #整形
 /usr/local/bin/pandoc \
+-f markdown+grid_tables+multiline_tables \
 --number-sections --epub-metadata=$epub_metadata --epub-stylesheet=$epub_style \
 -t epub3 --toc-depth=3 \
 --highlight-style=monochrome \
